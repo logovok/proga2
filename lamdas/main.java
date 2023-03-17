@@ -110,13 +110,17 @@ class ArrayConcatController implements BiFunction<int[], int[], ArrayList<Intege
             double avg1 = Arrays.stream(ar1).average().orElse(0);
             double avg2 = Arrays.stream(ar2).average().orElse(0);
             ArrayList<Integer> res = new ArrayList<>();
+            
+            double max = Math.max(avg1, avg2);
+            double min = Math.min(avg1, avg2);
+            
             Arrays.stream(ar1)
-                    .filter(item -> item >= Math.min(avg1, avg2)
-                            && item <= Math.max(avg1, avg2))
+                    .filter(item -> item >= min
+                            && item <= max)
                     .forEach(res::add);
             Arrays.stream(ar2)
-                    .filter(item -> item >= Math.min(avg1, avg2)
-                            && item <= Math.max(avg1, avg2))
+                    .filter(item -> item >= min
+                            && item <= max)
                     .forEach(res::add);
 
             return res;
