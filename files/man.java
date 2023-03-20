@@ -37,6 +37,9 @@ class ProcessController{
         File out2 = new File(outDir,"out2");
         File out3 = new File(outDir,"out3");
 
+try{
+    outDir.mkdir(); out1.createNewFile(); out2.createNewFile(); out3.createNewFile();
+} catch (Exception ignored){}
 
         try(FileWriter fr1 = new FileWriter(out1, false);
             FileWriter fr2 = new FileWriter(out2, false);
@@ -54,11 +57,12 @@ class ProcessController{
     }
     int i = 1;
     Scanner sc;
-    
+
     public void processAndWrite(String fileName, ThreeItems<FileWriter> writers){
 
         try{
             File inDir = new File("src/InputFiles");
+            inDir.mkdir();
             File f1 = new File(inDir, fileName);
             sc = new Scanner(f1);
             sc.nextLine();
