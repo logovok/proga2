@@ -55,7 +55,7 @@ try{
         }
 
     }
-    int i = 1;
+ 
     Scanner sc;
 
     public void processAndWrite(String fileName, ThreeItems<FileWriter> writers){
@@ -66,7 +66,6 @@ try{
             File f1 = new File(inDir, fileName);
             sc = new Scanner(f1);
             sc.nextLine();
-            int i = 1;
             LinkedList<BottleModel> le= new LinkedList<>();
             while (sc.hasNext()){
                 String[] tmpStr=sc.nextLine().split(" ");
@@ -93,8 +92,6 @@ try{
         catch (IOException e) {
 
             throw new RuntimeException(e);
-        } finally {
-            i=1;
         }
     }
 }
