@@ -54,15 +54,7 @@ class ProcessController{
     }
     int i = 1;
     Scanner sc;
-    int movableInt() {
-        if (sc.hasNext()){
-            i=i+1;
-
-            System.out.println(i);
-            return i;
-        }
-        return i;
-    }
+    
     public void processAndWrite(String fileName, ThreeItems<FileWriter> writers){
 
         try{
@@ -74,7 +66,6 @@ class ProcessController{
             LinkedList<BottleModel> le= new LinkedList<>();
             while (sc.hasNext()){
                 String[] tmpStr=sc.nextLine().split(" ");
-                movableInt();
                 le.add(new BottleModel(Integer.parseInt(tmpStr[0]),tmpStr[1], Double.parseDouble(tmpStr[2]),tmpStr[3]));
             }
             Stream<BottleModel> stream = le.stream();
