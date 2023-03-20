@@ -7,12 +7,6 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) throws URISyntaxException {
-//        File inDir = new File("src/InputFiles");
-//        File outDir = new File("src/OutputFiles");
-//
-//        File out1 = new File(outDir,"out1");
-//        File out2 = new File(outDir,"out2");
-//        File out3 = new File(outDir,"out3");
 
 
 
@@ -25,34 +19,7 @@ public class Main {
         ProcessController prCo = new ProcessController();
         prCo.processFilesInList(inputFiles);
 
-//        try(FileWriter fr1 = new FileWriter(out1, false);
-//            FileWriter fr2 = new FileWriter(out2, false);
-//            FileWriter fr3 = new FileWriter(out3, false)) {
-//
-//            for(String fileName : inputFiles){
-//                try{
-//                    File f1 = new File(inDir, fileName);
-//                    Scanner sc = new Scanner(f1);
-//                    sc.nextLine();
-//                    Stream<BottleModel> stream = Stream.generate(() -> {
-//                        String[] tmpStr=sc.nextLine().trim().split(" ");
-//                        return new BottleModel(Integer.parseInt(tmpStr[0]),tmpStr[1], Double.parseDouble(tmpStr[2]),tmpStr[3]);
-//                    });
-//
-//
-//                } catch (IndexOutOfBoundsException ieo){
-//                    System.out.println("End of file"); // Because of call of tmpStr
-//                }
-//                catch (FileNotFoundException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+
 
 
 
