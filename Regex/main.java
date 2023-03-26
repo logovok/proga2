@@ -14,7 +14,7 @@ class FileFilter{
     public String inputFileName;
     public String outputFileName;
     public int filteringLength;
-
+    public  String regex = "(\\b[^aeiouAEIOU\\W]\\w*\\b)+?";
     public  FileFilter(String inputFile, String outputFile, int filteringLength){
         inputFileName = inputFile;
         outputFileName = outputFile;
@@ -29,8 +29,8 @@ class FileFilter{
             Scanner sc = new Scanner(inn)){ 
 
             while (sc.hasNext()){
-                if (sc.hasNext("(\\b[^aeiouAEIOU\\W]\\w*\\b)+?")){
-                    String s = sc.next("(\\b[^aeiouAEIOU\\W]\\w*\\b)+?");
+                if (sc.hasNext(regex)){
+                    String s = sc.next(regex);
                     if (s.length() != filteringLength) {
                         fw.write(s+" ");
                     }
