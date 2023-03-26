@@ -5,25 +5,25 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        FileFilter ff = new FileFilter("in.txt", "out.txt", 6);
+        FileFilter ff = new FileFilter(new File("in.txt"), new File("out.txt"), 6);
         ff.filter();
     }
 }
 
 class FileFilter{
-    public String inputFileName;
-    public String outputFileName;
+    public File inputFile;
+    public File outputFile;
     public int filteringLength;
     public  String regex = "(\\b[^aeiouAEIOU\\W]\\w*\\b)+?";
-    public  FileFilter(String inputFile, String outputFile, int filteringLength){
-        inputFileName = inputFile;
-        outputFileName = outputFile;
+    public  FileFilter(File inputFile, File outputFile, int filteringLength){
+        this.inputFile = inputFile;
+        this.outputFile = outputFile;
         this.filteringLength = filteringLength;
     }
 
     public void filter(){
-        File inn = new File(inputFileName);
-        File out = new File(outputFileName);
+        File inn = this.inputFile;
+        File out = this.outputFile;
 
         try(FileWriter fw = new FileWriter(out, false);
             Scanner sc = new Scanner(inn)){ 
