@@ -34,7 +34,7 @@ public class Main {
         List<Future<FileWrapper>> fut1 = new ArrayList<>();
 
 
-        // Async time 
+        // Async time
         var time1 = System.currentTimeMillis();
         try(var exc1 = Executors.newFixedThreadPool(3)) {
             fut1 = exc1.invokeAll(List.of(_fp2a ,fp2a, fp2a2));
@@ -42,8 +42,8 @@ public class Main {
             throw new RuntimeException(e);
         }
         time1 = System.currentTimeMillis() - time1;
-            
-            
+
+
         // Sync time
         var time2 = System.currentTimeMillis();
         try {
@@ -84,6 +84,7 @@ class FileProcessor1Async implements Runnable{
 
     public FileProcessor1Async(File input){
         this.input = input;
+
     }
 
     @Override
@@ -91,7 +92,7 @@ class FileProcessor1Async implements Runnable{
         try(FileInputStream fis = new FileInputStream(input)) {
             int chr;
             while((chr = fis.read()) != -1){
-                if (chr == 44){ // ',' == 44
+                if (chr == 44 /* || chr == 45 || chr == 46 ||chr == 33 || chr ==63*/){ // ',' == 44
                     count++;
                 }
             }
@@ -113,7 +114,7 @@ class FileProcessor2Async implements Callable<FileWrapper>{
         try(FileInputStream fis = new FileInputStream(input)) {
             int chr;
             while((chr = fis.read()) != -1){
-                if (chr == 44){ // ',' == 44
+                if (chr == 44 /* || chr == 45 || chr == 46 ||chr == 33 || chr ==63*/){ // ',' == 44
                     count++;
                 }
             }
