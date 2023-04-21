@@ -27,9 +27,9 @@ public class Main {
 
 
         SharedSumAtomic shrsmm2 = new SharedSumAtomic();
-        SumMaker2 smk1_2 = new SumMaker2(f1, shrsmm2);
-        SumMaker2 smk2_2 = new SumMaker2(f2, shrsmm2);
-        SumMaker2 smk3_2 = new SumMaker2(f3, shrsmm2);
+        SumMaker smk1_2 = new SumMaker(f1, shrsmm2);
+        SumMaker smk2_2 = new SumMaker(f2, shrsmm2);
+        SumMaker smk3_2 = new SumMaker(f3, shrsmm2);
 
         Thread th1_2 = new Thread(smk1_2);
         Thread th2_2 = new Thread(smk2_2);
@@ -46,9 +46,9 @@ public class Main {
 
 class SumMaker implements Runnable{
     File f;
-    SharedSum shs;
+    IAddAndSum shs;
 
-    public SumMaker(File f, SharedSum shs){
+    public SumMaker(File f, IAddAndSum shs){
         this.f = f;
         this.shs= shs;
     }
@@ -72,7 +72,13 @@ class SumMaker implements Runnable{
 
 }
 
-class SharedSum {
+interface IAddAndSum{
+        double getSum();
+    void add(int number);
+    void add(double number);
+}
+
+class SharedSum implements  IAddAndSum {
     private long intPart = 0;
     private double doublePart = 0;
 
@@ -93,7 +99,7 @@ class SharedSum {
     }
 }
 
-class SharedSumAtomic{
+class SharedSumAtomic implements IAddAndSum{
     LongAccumulator longAccumulator = new LongAccumulator(Long::sum, 0);
     DoubleAccumulator doubleAccumulator = new DoubleAccumulator(Double::sum, 0);
 
@@ -101,38 +107,19 @@ class SharedSumAtomic{
         return longAccumulator.get() + doubleAccumulator.get();
     }
 
+    @Override
+    public void add(int number) {
+        longAccumulator.accumulate(number);
+    }
+
+    @Override
+    public void add(double number) {
+        doubleAccumulator.accumulate(number);
+    }
+
     public String toString(){
         return String.valueOf(getSum());
     }
 
-
-}
-
-class SumMaker2 implements Runnable{
-    File f;
-    SharedSumAtomic shs;
-
-    public SumMaker2(File f, SharedSumAtomic shs){
-        this.f = f;
-        this.shs= shs;
-    }
-
-    @Override
-    public void run() {
-        try(Scanner sc = new Scanner(f);){
-            while(sc.hasNext()){
-
-                if (sc.hasNextLong()){
-                    shs.longAccumulator.accumulate(sc.nextInt());
-                } else if (sc.hasNextDouble()) {
-                    shs.doubleAccumulator.accumulate(sc.nextDouble());
-                } else {
-                    sc.next();
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }
