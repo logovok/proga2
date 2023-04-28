@@ -1,10 +1,9 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,9 +56,15 @@ class FileSpacesProcessor_Common extends Thread{
             ex.submit(fochh);
             isOddNumber = true;
         }
+
+        try {
+            ex.awaitTermination(0, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         ex.shutdown();
         time = System.currentTimeMillis() - time;
-        System.out.println(time);
+        System.out.println("Another method " + time);
     }
 }
 
@@ -122,14 +127,22 @@ class FileCharChanger_Common implements Runnable{
 
 
 class FileThingHandler{
-    static void process(List<FileThing> lft){
+    static void process(List<FileThing> lft) throws InterruptedException {
         var time = System.currentTimeMillis();
+        List<Thread> thL = new LinkedList<>();
         for (var item : lft){
-            new Thread(item::isOddSpaces).start();
-            new Thread(item::changeLetters).start();
+            Thread t1 = new Thread(item::isOddSpaces);
+            t1.start();
+            thL.add(t1);
+            Thread t2 = new Thread(item::changeLetters);
+            t2.start();
+            thL.add(t2);
+        }
+        for (Thread thread : thL) {
+            thread.join();
         }
         time = System.currentTimeMillis() - time;
-        System.out.println(time);
+        System.out.println("Suggested method " + time);
     }
 }
 
