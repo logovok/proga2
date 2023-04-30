@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
     public static void main(String[] args) {
-        List<Plane> planes = ValueGenerator.getPlanes(3);
+        List<Plane> planes = ValueGenerator.getPlanes();
         PassengerDistributor psDis = new PassengerDistributor(ValueGenerator.getBuses());
         psDis.distribute(planes);
 
@@ -19,29 +19,29 @@ class PassengerDistributor{
     }
     HashMap<String, LinkedList<Bus>> airportBuses;
     void distribute(List<Plane> planes){
-//        If not compiles remove try and insert commented code
         ExecutorService excS = Executors.newCachedThreadPool();
-            for (Plane p : planes){
-                excS.submit(() -> {
-                    while(!(p.families.size() == 0)){
-                        p.families.sort((it1, it2) -> Integer.compare(it2.count, it1.count)); //reversed
-                        List<Family> notSent = new LinkedList<>();
-                        p.families.forEach((f) -> {
-                            if(!this.putOnBus(f)){
-                                notSent.add(f);
-                            }
-                        });
-                        p.families = notSent;
-                    }
-                });
-            }
+        for (Plane p : planes){
+            excS.submit(() -> {
+                while(!(p.families.size() == 0)){
+                    p.families.sort((it1, it2) -> Integer.compare(it2.count, it1.count)); //reversed
+                    List<Family> notSent = new LinkedList<>();
+                    p.families.forEach((f) -> {
+                        if(!this.putOnBus(f)){
+                            notSent.add(f);
+                        }
+                    });
+                    p.families = notSent;
+                }
+            });
+        }
         try {
             excS.awaitTermination(1, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-            excS.shutdown();
+        excS.shutdown();
 
+        
 
         sendLastPassengers();
         System.out.println(ValueGenerator.atomicInteger.get());
@@ -58,7 +58,7 @@ class PassengerDistributor{
                     });
                 });
     }
-     boolean putOnBus(Family family){
+    boolean putOnBus(Family family){
         var busses = airportBuses.get(family.travelTo);
         int delta;
         for(Bus b : busses){
@@ -79,9 +79,9 @@ class PassengerDistributor{
 
 class Family{
     public Family(String name, String travelTo, int countOfMembers){
-    this.name = name;
-    this.travelTo = travelTo;
-    this.count = countOfMembers;
+        this.name = name;
+        this.travelTo = travelTo;
+        this.count = countOfMembers;
     }
     String name; // twoLetters “aa”, “ab”, ..., “zz” – for example, up to 100 names
     String travelTo; // 4 cities – “Kalush”, “Kosiv”, “Galych”, “Kolomiya”
@@ -112,9 +112,9 @@ class Bus{
         } else return -1;
     }
 
-     synchronized void sendOnRoute(){
-         //System.out.println(this.toString() + " departed form airport");
-         ValueGenerator.atomicInteger.addAndGet(passengersCount);
+    synchronized void sendOnRoute(){
+        //System.out.println(this.toString() + " departed form airport");
+        ValueGenerator.atomicInteger.addAndGet(passengersCount);
         new Thread(() -> {
             try {
                 Thread.sleep(300);
@@ -164,7 +164,7 @@ class ValueGenerator{
 
         return hashMap;
     }
-    
+
     static List<Plane> getPlanes(){
         LinkedList<Plane> res = new LinkedList<>();
         for (int i = 0; i < r.nextInt(0,4); i++) {
