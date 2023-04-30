@@ -21,8 +21,7 @@ class PassengerDistributor{
     HashMap<String, ConcurrentLinkedQueue<Bus>> airportBuses;
     void distribute(List<Plane> planes){
 //        If not compiles remove try and insert commented code
-//        ExecutorService excS = Executors.newCachedThreadPool();
-        try(ExecutorService excS = Executors.newCachedThreadPool();){
+        ExecutorService excS = Executors.newCachedThreadPool();
             for (Plane p : planes){
                 excS.submit(() -> {
                     while(!(p.families.size() == 0)){
@@ -37,16 +36,16 @@ class PassengerDistributor{
                     }
                 });
             }
+        try {
+            excS.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
+            excS.shutdown();
 
-//            excS.shutdown();
-//            try {
-//                excS.awaitTermination(30, TimeUnit.SECONDS);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
+
         sendLastPassengers();
-        System.out.println(ValueGenerator.clqF.stream().map((family -> family.count)).reduce(Integer::sum).get());
+        System.out.println(ValueGenerator.atomicInteger.get());
     }
 
     void sendLastPassengers(){
@@ -110,14 +109,13 @@ class Bus{
 
         if (f.count + passengersCount <=capacity){
             passengersCount +=f.count;
-            ValueGenerator.clqF.add(f);
             return capacity - passengersCount;
         } else return -1;
     }
 
      synchronized void sendOnRoute(){
          //System.out.println(this.toString() + " departed form airport");
-         //ValueGenerator.atomicInteger.addAndGet(passengersCount);
+         ValueGenerator.atomicInteger.addAndGet(passengersCount);
         new Thread(() -> {
             try {
                 Thread.sleep(300);
@@ -143,10 +141,10 @@ class ValueGenerator{
         while (sum + 4 < 100){
             tmp = r.nextInt(1,5);
             ll.add(new Family(new Random().toString(), randDestination(), tmp));
-            //atomicInteger.addAndGet(tmp*-1);
+            atomicInteger.addAndGet(tmp*-1);
             sum += tmp;
         }
-        //atomicInteger.addAndGet((100-sum)*-1);
+        atomicInteger.addAndGet((100-sum)*-1);
         ll.add(new Family(new Random().toString(), randDestination(), 100-sum));
         return ll;
     }
@@ -175,7 +173,7 @@ class ValueGenerator{
         }
         return res;
     }
-    static ConcurrentLinkedQueue<Family> clqF = new ConcurrentLinkedQueue<>();
+    static AtomicInteger atomicInteger = new AtomicInteger();
     static List<Plane> getPlanes(int count){
         LinkedList<Plane> res = new LinkedList<>();
         for (int i = 0; i < count; i++) {
