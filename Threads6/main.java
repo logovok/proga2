@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,10 +14,10 @@ public class Main {
 }
 
 class PassengerDistributor{
-    public PassengerDistributor(HashMap<String, ConcurrentLinkedQueue<Bus>> airportBuses){
+    public PassengerDistributor(HashMap<String, LinkedList<Bus>> airportBuses){
         this.airportBuses = airportBuses;
     }
-    HashMap<String, ConcurrentLinkedQueue<Bus>> airportBuses;
+    HashMap<String, LinkedList<Bus>> airportBuses;
     void distribute(List<Plane> planes){
 //        If not compiles remove try and insert commented code
         ExecutorService excS = Executors.newCachedThreadPool();
@@ -153,10 +152,10 @@ class ValueGenerator{
         return cities[r.nextInt(0,4)];
     }
 
-    static HashMap<String, ConcurrentLinkedQueue<Bus>> getBuses(){
-        HashMap<String, ConcurrentLinkedQueue<Bus>> hashMap = new HashMap<>();
+    static HashMap<String, LinkedList<Bus>> getBuses(){
+        HashMap<String, LinkedList<Bus>> hashMap = new HashMap<>();
         for(String city : cities){
-            ConcurrentLinkedQueue<Bus> buses = new ConcurrentLinkedQueue<>();
+            LinkedList<Bus> buses = new LinkedList<>();
             for (int i = 0; i < r.nextInt(10, 20); i++) {
                 buses.add(new Bus(r.nextInt(6,9), city));
             }
