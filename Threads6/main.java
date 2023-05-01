@@ -66,9 +66,7 @@ class PassengerDistributor{
             if ((delta = b.tryAddPassengers(family)) >= 0){
                 //System.out.println("Family on bus " + b.toString());
                 if (delta == 0){
-                    //busses.remove(b);
                     b.sendOnRoute();
-                    //busses.add(b);
                 }
                 return true;
             }
@@ -83,17 +81,17 @@ class Family{
         this.travelTo = travelTo;
         this.count = countOfMembers;
     }
-    String name; // twoLetters “aa”, “ab”, ..., “zz” – for example, up to 100 names
-    String travelTo; // 4 cities – “Kalush”, “Kosiv”, “Galych”, “Kolomiya”
-    int count; // family members count, from 1 to 4 members
+    String name;
+    String travelTo; 
+    int count;
 }
 class Plane{
     public Plane(List<Family> families, int id){
         this.id = id;
         this.families = families;
     }
-    List<Family> families; // exactly 100 family members
-    int id; // exactly 1, 2, 3
+    List<Family> families;
+    int id; 
 }
 class Bus{
     public Bus(int capacity, String driveTo){
@@ -102,7 +100,7 @@ class Bus{
     }
     int capacity;
     int passengersCount = 0; // 6 or 7 or 8
-    String driveTo; // 4 cities – “Kalush”, “Kosiv”, “Galych”, “Kolomiya”
+    String driveTo; 
 
     synchronized int tryAddPassengers(Family f){
 
