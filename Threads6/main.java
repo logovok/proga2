@@ -19,9 +19,9 @@ class PassengerDistributor{
     }
     HashMap<String, LinkedList<Bus>> airportBuses;
     void distribute(List<Plane> planes){
-        ExecutorService excS = Executors.newCachedThreadPool();
+        LinkedList<Thread> thL = new LinkedList<>();
         for (Plane p : planes){
-            excS.submit(() -> {
+            Thread t = new Thread(() -> {
                 while(!(p.families.size() == 0)){
                     p.families.sort((it1, it2) -> Integer.compare(it2.count, it1.count)); //reversed
                     List<Family> notSent = new LinkedList<>();
@@ -33,15 +33,25 @@ class PassengerDistributor{
                     p.families = notSent;
                 }
             });
+            t.start();
+            thL.add(t);
         }
-        try {
-            excS.awaitTermination(1, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        excS.shutdown();
 
-        
+        thL.forEach((th)->{
+            try {
+                th.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        Bus.lilThreadsList.forEach((th)->{
+            try {
+                th.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         sendLastPassengers();
         System.out.println(ValueGenerator.atomicInteger.get());
@@ -53,7 +63,7 @@ class PassengerDistributor{
                     buses.forEach((bus) -> {
                         if (bus.passengersCount > 0){
                             bus.sendOnRoute();
-                            //System.out.println("Bus departed." + bus.toString());
+                            System.out.println("Bus departed." + bus.toString());
                         }
                     });
                 });
@@ -64,7 +74,7 @@ class PassengerDistributor{
         for(Bus b : busses){
 
             if ((delta = b.tryAddPassengers(family)) >= 0){
-                //System.out.println("Family on bus " + b.toString());
+                System.out.println("Family on bus " + b.toString());
                 if (delta == 0){
                     b.sendOnRoute();
                 }
@@ -82,7 +92,7 @@ class Family{
         this.count = countOfMembers;
     }
     String name;
-    String travelTo; 
+    String travelTo;
     int count;
 }
 class Plane{
@@ -91,7 +101,7 @@ class Plane{
         this.families = families;
     }
     List<Family> families;
-    int id; 
+    int id;
 }
 class Bus{
     public Bus(int capacity, String driveTo){
@@ -99,8 +109,8 @@ class Bus{
         this.driveTo = driveTo;
     }
     int capacity;
-    int passengersCount = 0; // 6 or 7 or 8
-    String driveTo; 
+    int passengersCount = 0;
+    String driveTo;
 
     synchronized int tryAddPassengers(Family f){
 
@@ -111,18 +121,21 @@ class Bus{
     }
 
     synchronized void sendOnRoute(){
-        //System.out.println(this.toString() + " departed form airport");
+        System.out.println(this.toString() + " departed form airport");
         ValueGenerator.atomicInteger.addAndGet(passengersCount);
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
                 Thread.sleep(300);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             passengersCount = 0;
-            //System.out.println(this.toString() + " arrived back to airport");
-        }).start();
+            System.out.println(this.toString() + " arrived back to airport");
+        });
+        t.start();
+        lilThreadsList.add(t);
     }
+    static LinkedList<Thread> lilThreadsList = new LinkedList<>();
     @Override
     public String toString(){
         return "To " + this.driveTo + " with " + this.passengersCount +"/" + this.capacity + " passengers";
@@ -170,6 +183,8 @@ class ValueGenerator{
         }
         return res;
     }
+
+    // To check if works correctly
     static AtomicInteger atomicInteger = new AtomicInteger();
     static List<Plane> getPlanes(int count){
         LinkedList<Plane> res = new LinkedList<>();
@@ -178,4 +193,7 @@ class ValueGenerator{
         }
         return res;
     }
+
+
+    
 }
