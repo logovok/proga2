@@ -61,6 +61,11 @@ class NumberProcessor{
         });
         return res;
     }
+    
+    static Map<Boolean, List<Integer>> splitUsingCollector(LinkedList<Integer> collection){
+        return collection.stream()
+                .collect(Collectors.partitioningBy(item -> item > 0));
+    }
 
 }
 
