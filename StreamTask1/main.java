@@ -1,6 +1,7 @@
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -42,10 +43,21 @@ class TextProcessor{
                         String.valueOf((char)str.charAt(0)).toUpperCase() + str.substring(1))
                 .collect(Collectors.joining(" "));
     }
+    static StringBuilder accumulator = new StringBuilder();
     static String getSortedSentencesByLength(String text){
-        return Arrays.stream(text.split("\\."))
-                .sorted((it1, it2) -> Integer.compare(it2.length(),it1.length()))
-                .collect(Collectors.joining("."));
+        AtomicInteger ai = new AtomicInteger(0);
+        TreeMap<Integer, String> res = new TreeMap<>();
+        text.chars().forEach(ch -> {
+            accumulator.append((char) ch);
+            if (ch == ' '){
+                ai.incrementAndGet();
+            }
+            if (ch == '.'){
+                res.put(ai.incrementAndGet(), accumulator.toString());
+                ai.set(0); accumulator = new StringBuilder();
+            }
+        });
+        return res.toString();
     }
 }
 
@@ -61,7 +73,7 @@ class NumberProcessor{
         });
         return res;
     }
-    
+
     static Map<Boolean, List<Integer>> splitUsingCollector(LinkedList<Integer> collection){
         return collection.stream()
                 .collect(Collectors.partitioningBy(item -> item > 0));
