@@ -38,7 +38,7 @@ public class Main {
 
 class ChunkReader extends Thread{
     static int chunkLinesCount = 10;
-   
+
     File f;
     public ChunkReader(File file){
         f = file;
@@ -94,7 +94,7 @@ class ChunkProcessor{
                 if ((ch >=65 && ch <= 90) || (ch >= 97 && ch <= 122)){
                     flag.set(true);
                     letters.incrementAndGet();
-                } else if (ch == ' ' && flag.get()) {
+                } else if ((ch == ' ' || ch == '.' || ch == '!' || ch == '?') && flag.get()) {
                     flag.set(false);
                     spaces.incrementAndGet();
                 }
