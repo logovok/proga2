@@ -4,15 +4,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Main {
     public static void main(String[] args) {
-        var lst = List.of(new ChunkReaderAnalyser("in1.txt"),
-                new ChunkReaderAnalyser("in2.txt"),
-                new ChunkReaderAnalyser("in3.txt"));
+        var lst = List.of(new ChunkReader("in1.txt"),
+                new ChunkReader("in2.txt"),
+                new ChunkReader("in3.txt"));
         var time = System.currentTimeMillis();
         lst.forEach(Thread::start);
 
@@ -34,13 +33,13 @@ public class Main {
     }
 }
 
-class ChunkReaderAnalyser extends Thread{
+class ChunkReader extends Thread{
     static int chunkLinesCount = 10;
     File f;
-    public ChunkReaderAnalyser(File file){
+    public ChunkReader(File file){
         f = file;
     }
-    public ChunkReaderAnalyser(String filename){
+    public ChunkReader(String filename){
         f = new File(filename);
     }
 
