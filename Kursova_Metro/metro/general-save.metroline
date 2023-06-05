@@ -1,0 +1,42 @@
+<alert-systems>
+<alert-system>
+<msg>Adv alert: Usi na Nivkiii!<\msg><identity>-580436953<\identity><identity>-1170808156<\identity><\alert-system>
+<\alert-systems>
+<stations>
+<station>
+<name>
+Politehnichna<\name>
+<state>
+ClosedStationState<\state>
+<banners>
+<owner>Chel z KP-11<\owner>
+<main-title>Go pislya peremogy na Nivky tusyt!<\main-title>
+<tagline>Na Nivkah veselo!<\tagline>
+<\banners>
+<instances>
+<instance>
+<identity>-580436953<\identity>
+<type>PhoneNotificationAlertInstance<\type><ntIdentifier>
+nc:21:gc:a2<\ntIdentifier>
+<\instance>
+<\instances>
+<\station>
+<station>
+<name>
+Nivki<\name>
+<state>
+ClosedStationState<\state>
+<banners>
+<owner>Chel z KP-11<\owner>
+<main-title>Go pislya peremogy na Nivky tusyt!<\main-title>
+<tagline>Na Nivkah veselo!<\tagline>
+<\banners>
+<instances>
+<instance>
+<identity>-1170808156<\identity>
+<type>StationSoundAlertInstance<\type><stationName>
+Nivki<\stationName>
+<\instance>
+<\instances>
+<\station>
+<\stations>
